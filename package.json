@@ -1,0 +1,21 @@
+{
+  "name": "falvizweb",
+  "version": "1.0.0",
+  "description": "Falviz — Premium Digital Agency Website",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=index.html",
+    "start": "live-server --port=3000 --open=index.html",
+    "serve": "npx serve . -p 3000"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "keywords": [
+    "digital-agency",
+    "web-design",
+    "web-development",
+    "digital-marketing"
+  ],
+  "author": "Falviz",
+  "license": "UNLICENSED"
+}
