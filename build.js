@@ -28,7 +28,7 @@ if (fs.existsSync(DIST)) {
 }
 fs.mkdirSync(DIST);
 
-console.log('📦  Building Falviz...\n');
+console.log('📦  Building Flaviz Web Company...\n');
 
 INCLUDE.forEach(item => {
   const srcPath = path.join(SRC, item);

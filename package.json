@@ -1,7 +1,7 @@
 {
   "name": "falvizweb",
   "version": "1.0.0",
-  "description": "Falviz — Premium Digital Agency Website",
+  "description": "Flaviz Web Company — Premium Digital Agency Website",
   "scripts": {
     "dev": "live-server --port=3000 --open=/index.html --no-css-inject",
     "start": "live-server --port=3000 --open=/index.html --no-css-inject",
@@ -17,6 +17,6 @@
     "web-development",
     "digital-marketing"
   ],
-  "author": "Falviz",
+  "author": "Flaviz Web Company",
   "license": "UNLICENSED"
 }
