@@ -306,7 +306,7 @@ function showFormSuccess(form, submitBtn) {
   form.innerHTML = `
     <div style="text-align:center; padding: 40px 20px;">
       <div style="font-size:56px; margin-bottom:20px;">🎉</div>
-      <h3 style="font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; margin-bottom:12px; background:linear-gradient(135deg,#00D4FF,#8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+      <h3 style="font-family:'Playfair Display',Georgia,serif; font-size:24px; font-weight:700; margin-bottom:12px; background:linear-gradient(135deg,#7B3FA0,#3B0A6B); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
         Enquiry Sent Successfully!
       </h3>
       <p style="color:#a0a0a0; font-size:16px; line-height:1.7;">
@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
     step.addEventListener('mouseenter', () => {
       steps.forEach((s, j) => {
         if (j <= i) {
-          s.querySelector('.process-num').style.background = 'linear-gradient(135deg, #00D4FF, #8B5CF6)';
+          s.querySelector('.process-num').style.background = 'linear-gradient(135deg, #7B3FA0, #3B0A6B)';
           s.querySelector('.process-num').style.color = 'white';
           s.querySelector('.process-num').style.borderColor = 'transparent';
         }
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
     top: 0;
     left: 0;
     height: 2px;
-    background: linear-gradient(90deg, #00D4FF, #8B5CF6, #F59E0B);
+    background: linear-gradient(90deg, #C084FC, #7B3FA0, #3B0A6B);
     z-index: 9999;
     transform-origin: left;
     transform: scaleX(0);
