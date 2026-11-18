@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initActiveNavLinks();
   initParallaxOrbs();
+  initScrollFrameAnimation();
 });
 
 
@@ -430,9 +431,154 @@ function initParallaxOrbs() {
   }
 }
 
+/* ============================================================
+   12. SCROLL-SCRUBBED BACKGROUND FRAME ANIMATION
+   ============================================================ */
+function initScrollFrameAnimation() {
+  const canvas = document.querySelector('.hero-bg-animation');
+  if (!canvas) return;
+
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const frameCount = 238;
+  const framePath = index =>
+    `assets/images/panther-frames/ezgif-frame-${String(index + 1).padStart(3, '0')}.jpg`;
+  const frames = new Map();
+  const loadingFrames = new Map();
+  let queue = [];
+  let activeLoads = 0;
+  let renderRequest = 0;
+  let previousFrame = 0;
+  let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const scheduleRender = () => {
+    if (renderRequest) return;
+    renderRequest = window.requestAnimationFrame(render);
+  };
+
+  const cacheFrame = (index, image) => {
+    frames.delete(index);
+    frames.set(index, image);
+    while (frames.size > 12) {
+      frames.delete(frames.keys().next().value);
+    }
+  };
+
+  const processQueue = () => {
+    while (activeLoads < 4 && queue.length) {
+      const { index } = queue.shift();
+      if (frames.has(index) || loadingFrames.has(index)) continue;
+
+      const image = new Image();
+      loadingFrames.set(index, image);
+      activeLoads++;
+      image.onload = () => {
+        loadingFrames.delete(index);
+        activeLoads--;
+        cacheFrame(index, image);
+        scheduleRender();
+        processQueue();
+      };
+      image.onerror = () => {
+        loadingFrames.delete(index);
+        activeLoads--;
+        console.error(`Unable to load background animation frame: ${framePath(index)}`);
+        processQueue();
+      };
+      image.src = framePath(index);
+    }
+  };
+
+  const requestFrame = (index, priority) => {
+    if (index < 0 || index >= frameCount || frames.has(index) || loadingFrames.has(index)) return;
+    const queued = queue.find(item => item.index === index);
+    if (queued) {
+      queued.priority = Math.max(queued.priority, priority);
+    } else {
+      queue.push({ index, priority });
+    }
+  };
+
+  const sizeCanvas = () => {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(window.innerWidth * pixelRatio);
+    canvas.height = Math.round(window.innerHeight * pixelRatio);
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    scheduleRender();
+  };
+
+  function render() {
+    renderRequest = 0;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = reducedMotion || maxScroll <= 0
+      ? 0
+      : Math.min(1, Math.max(0, window.scrollY / maxScroll));
+    const frame = progress * (frameCount - 1);
+    const firstIndex = Math.floor(frame);
+    const secondIndex = Math.min(frameCount - 1, firstIndex + 1);
+    const direction = frame >= previousFrame ? 1 : -1;
+    previousFrame = frame;
+
+    requestFrame(firstIndex, 10);
+    requestFrame(secondIndex, 10);
+    for (let offset = 1; offset <= 5; offset++) {
+      requestFrame(firstIndex + direction * offset, 1);
+    }
+    queue = queue
+      .filter(item => Math.abs(item.index - firstIndex) <= 8)
+      .sort((a, b) => b.priority - a.priority);
+    processQueue();
+
+    const firstImage = frames.get(firstIndex);
+    const secondImage = frames.get(secondIndex);
+    const image = firstImage || secondImage;
+    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    if (!image) return;
+
+    const draw = (frameImage, opacity) => {
+      const scale = Math.max(
+        window.innerWidth / frameImage.naturalWidth,
+        window.innerHeight / frameImage.naturalHeight
+      );
+      const width = frameImage.naturalWidth * scale;
+      const height = frameImage.naturalHeight * scale;
+      context.globalAlpha = opacity;
+      context.drawImage(
+        frameImage,
+        (window.innerWidth - width) / 2,
+        (window.innerHeight - height) / 2,
+        width,
+        height
+      );
+    };
+
+    if (firstImage && secondImage && firstIndex !== secondIndex) {
+      draw(firstImage, 1 - (frame - firstIndex));
+      draw(secondImage, frame - firstIndex);
+    } else {
+      draw(image, 1);
+    }
+    context.globalAlpha = 1;
+
+    for (const index of [firstIndex, secondIndex]) {
+      const cachedImage = frames.get(index);
+      if (cachedImage) cacheFrame(index, cachedImage);
+    }
+  }
+
+  window.addEventListener('scroll', scheduleRender, { passive: true });
+  window.addEventListener('resize', sizeCanvas, { passive: true });
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener?.('change', event => {
+    reducedMotion = event.matches;
+    scheduleRender();
+  });
+  sizeCanvas();
+}
+
 
 /* ============================================================
-   12. PORTFOLIO CARD 3D TILT
+   13. PORTFOLIO CARD 3D TILT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

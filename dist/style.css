@@ -66,6 +66,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+  isolation: isolate;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -378,15 +379,23 @@ body {
   display: flex;
   align-items: center;
   position: relative;
-  overflow: hidden;
   padding: 120px 0 80px;
 }
 
 /* Background effects */
 .hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-bg-animation {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .hero-orb {
@@ -534,40 +543,6 @@ body {
   font-weight: 500;
 }
 
-/* ============================================================
-   HERO PANTHER BACKGROUND (Direct on right side, NOT in a card)
-   ============================================================ */
-.hero-bg-panther {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: clamp(700px, 58vw, 880px);
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.hero-bg-panther-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 62% center;
-  display: block;
-  filter: contrast(1.1) brightness(1.08);
-}
-
-.hero-bg-panther-vignette {
-  position: absolute;
-  inset: 0;
-  background: 
-    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, 0.75) 10%, transparent 32%),
-    linear-gradient(to top, #050505 0%, transparent 10%),
-    linear-gradient(to bottom, #050505 0%, transparent 10%);
-  pointer-events: none;
-}
-
 .hero-right-space {
   position: relative;
   height: 100%;
@@ -620,7 +595,6 @@ body {
    PORTFOLIO SECTION
    ============================================================ */
 #portfolio {
-  background: var(--bg-secondary);
   position: relative;
   overflow: hidden;
 }
@@ -861,7 +835,6 @@ body {
    SERVICES
    ============================================================ */
 #services {
-  background: var(--bg-secondary);
   position: relative;
 }
 
@@ -1122,7 +1095,6 @@ body {
    PROCESS
    ============================================================ */
 #process {
-  background: var(--bg-secondary);
   position: relative;
   overflow: hidden;
 }
@@ -1261,7 +1233,6 @@ body {
    CONTACT
    ============================================================ */
 #contact {
-  background: var(--bg-secondary);
   position: relative;
   overflow: hidden;
 }
@@ -1433,7 +1404,9 @@ body {
    FOOTER
    ============================================================ */
 #footer {
-  background: var(--bg-primary);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-top: 1px solid var(--border);
   padding: 80px 0 0;
 }
@@ -1634,7 +1607,6 @@ body {
    ============================================================ */
 @media (max-width: 1024px) {
   .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-  .hero-bg-panther { width: 75%; opacity: 0.45; }
   .hero-right-space { min-height: auto; padding: 0; justify-content: flex-start; }
   .hero-title { font-size: clamp(32px, 6vw, 52px); }
   .hero-stats { gap: 24px; }
@@ -1655,22 +1627,6 @@ body {
   .nav-links, .nav-cta { display: none; }
   .nav-toggle { display: flex; }
   .hero-inner { gap: 36px; }
-  /* Keep the panther framed across the top of the stacked mobile hero,
-     instead of stretching the desktop right-side crop behind all content. */
-  .hero-bg-panther {
-    top: 0;
-    right: 0;
-    bottom: auto;
-    width: 100%;
-    height: 62%;
-    opacity: 0.32;
-  }
-  .hero-bg-panther-img { object-position: 68% center; }
-  .hero-bg-panther-vignette {
-    background:
-      linear-gradient(to bottom, rgba(5,5,5,0.05) 0%, rgba(5,5,5,0.35) 48%, #050505 100%),
-      linear-gradient(to right, #050505 0%, rgba(5,5,5,0.1) 60%, rgba(5,5,5,0.25) 100%);
-  }
   .hero-right-space { display: none; }
   .hero-stats { flex-wrap: wrap; gap: 20px; }
   .why-grid { grid-template-columns: 1fr; }
@@ -1692,8 +1648,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  .hero-bg-panther { height: 52%; opacity: 0.28; }
-  .hero-bg-panther-img { object-position: 66% center; }
   .hero-title { font-size: 32px; }
   .hero-stats { gap: 16px; }
 }
