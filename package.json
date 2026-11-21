@@ -3,13 +3,21 @@
   "version": "1.0.0",
   "description": "Flaviz Web Company — Premium Digital Agency Website",
   "scripts": {
-    "dev": "live-server --port=3000 --open=/index.html --no-css-inject",
-    "start": "live-server --port=3000 --open=/index.html --no-css-inject",
-    "build": "node build.js",
-    "preview": "live-server dist --port=4000 --open=/index.html --no-css-inject"
+    "dev": "vite --port 3000",
+    "start": "vite --port 3000 --open",
+    "build": "vite build",
+    "preview": "vite preview --port 4000 --open",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
   },
   "keywords": [
     "digital-agency",
@@ -18,5 +26,11 @@
     "digital-marketing"
   ],
   "author": "Flaviz Web Company",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.1"
+  }
 }
